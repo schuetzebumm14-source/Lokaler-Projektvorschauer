@@ -1,0 +1,33 @@
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg p-6 w-[500px] shadow-xl">
+    <h2 class="text-lg font-semibold mb-4 text-gray-900">Konfiguriere deinen Gemini API-Schlüssel für die KI-Funktionen.</h2>
+    
+    <label for="apiKey" class="block text-sm font-medium text-gray-700 mb-2">Gemini API-Schlüssel</label>
+    <input 
+      id="apiKey"
+      type="password" 
+      [(ngModel)]="apiKey"
+      placeholder="AizaSy..."
+      class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    >
+    
+    <div class="flex items-center gap-2 text-sm text-gray-600 mb-6">
+      <mat-icon class="text-sm">info</mat-icon>
+      <span>Der Schlüssel wird lokal in deinem Browser gespeichert.</span>
+    </div>
+
+    <div class="bg-blue-50 p-4 rounded-lg mb-6">
+      <h3 class="font-semibold text-blue-900 mb-2">ANLEITUNG</h3>
+      <ol class="list-decimal list-inside text-sm text-blue-800 space-y-1">
+        <li>Gehe zu <a href="https://aistudio.google.com/" target="_blank" class="underline">Google AI Studio</a></li>
+        <li>Erstelle einen kostenlosen API-Key.</li>
+        <li>Kopiere den Key und füge ihn oben ein.</li>
+      </ol>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <button (click)="cancel()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">Abbrechen</button>
+      <button (click)="save()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Speichern</button>
+    </div>
+  </div>
+</div>

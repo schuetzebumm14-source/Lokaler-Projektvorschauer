@@ -1,0 +1,5 @@
+{
+  "name": "Remix: Local Project Previewer",
+  "description": "An Angular tool to preview local web projects by uploading folders and embedding them in a StackBlitz environment.",
+  "requestFramePermissions": []
+}

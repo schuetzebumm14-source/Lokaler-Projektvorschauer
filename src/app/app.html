@@ -1,0 +1,117 @@
+<!-- Header -->
+<header class="bg-[#18181b] border-b border-gray-800 p-4 flex justify-between items-center shrink-0">
+  <div class="flex items-center gap-3">
+    <mat-icon class="text-blue-500">code</mat-icon>
+    <h1 class="text-xl font-semibold text-white">Lokale Projekt Vorschau</h1>
+  </div>
+  <div class="flex items-center gap-2">
+    @if (hasProject()) {
+      <button 
+        (click)="toggleFullscreen()" 
+        class="bg-[#27272a] hover:bg-[#3f3f46] text-white p-2 rounded-md transition-all flex items-center justify-center cursor-pointer active:scale-95"
+        title="Vollbildmodus"
+      >
+        <mat-icon>{{ isFullscreen() ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+      </button>
+    }
+    <button 
+      (click)="toggleSettings()" 
+      class="bg-[#27272a] hover:bg-[#3f3f46] text-white p-2 rounded-md transition-all flex items-center justify-center cursor-pointer active:scale-95"
+      title="Einstellungen"
+    >
+      <mat-icon>settings</mat-icon>
+    </button>
+    <input 
+      type="file" 
+      #folderInput 
+      (change)="onFolderSelected($event)"
+      webkitdirectory 
+      directory 
+      multiple 
+      class="hidden"
+    >
+    <button 
+      (click)="folderInput.click()" 
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-all flex items-center gap-2 cursor-pointer active:scale-95"
+    >
+      <mat-icon class="text-sm">upload</mat-icon>
+      Projekt-Ordner laden
+    </button>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="flex flex-1 overflow-hidden h-[calc(100vh-65px)]">
+  
+  <!-- Sidebar (Dateistruktur) -->
+  <aside class="w-64 bg-[#121214] border-r border-gray-800 flex flex-col shrink-0">
+    <div class="p-3 border-b border-gray-800 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+      Datei-Explorer
+    </div>
+    <div class="flex-1 overflow-y-auto p-2 custom-scrollbar">
+      @if (files().length > 0) {
+        @for (file of files(); track file) {
+          <div class="flex items-center gap-2 text-xs text-gray-400 py-1.5 px-2 hover:bg-white/5 hover:text-gray-200 rounded transition-colors truncate group cursor-default">
+            <mat-icon class="text-xs text-gray-600 group-hover:text-blue-400">description</mat-icon>
+            <span class="truncate">{{ file }}</span>
+          </div>
+        }
+      } @else {
+        <div class="text-sm text-gray-600 p-8 text-center mt-10 flex flex-col items-center gap-4">
+          <mat-icon class="text-4xl opacity-10">folder_open</mat-icon>
+          <p class="leading-relaxed">Wähle einen Ordner aus, um die Dateistruktur zu sehen.</p>
+        </div>
+      }
+    </div>
+  </aside>
+
+  <!-- Preview Area -->
+  <section class="flex-1 bg-[#0e0e11] relative flex flex-col">
+    
+    <!-- Loading Overlay -->
+    @if (isLoading()) {
+      <div class="absolute inset-0 bg-[#0e0e11]/90 z-20 flex flex-col items-center justify-center backdrop-blur-sm">
+        <div class="loader w-12 h-12 mb-4"></div>
+        <p class="text-gray-400 font-medium">Dateien werden verarbeitet...</p>
+        <p class="text-xs text-gray-600 mt-2">StackBlitz Server wird vorbereitet</p>
+      </div>
+    }
+
+    <!-- StackBlitz Container -->
+    <div id="embedContainer" #embedContainer class="flex-1 w-full h-full">
+      @if (!hasProject() && !showFallback()) {
+        <div class="flex h-full items-center justify-center text-gray-700 flex-col gap-4">
+          <mat-icon class="text-6xl opacity-10">terminal</mat-icon>
+          <div class="text-center">
+            <p class="text-lg font-medium text-gray-500">Vorschau-Fenster</p>
+            <p class="text-sm text-gray-600 mt-1">Lade ein Projekt, um die Live-Vorschau zu starten.</p>
+          </div>
+        </div>
+      }
+
+      @if (showFallback()) {
+        <div class="flex h-full items-center justify-center text-gray-400 flex-col gap-6 p-8 text-center bg-[#121214]">
+          <mat-icon class="text-6xl text-amber-500/50">warning</mat-icon>
+          <div class="max-w-md">
+            <h3 class="text-xl font-semibold text-white mb-2">Verbindungsproblem</h3>
+            <p class="text-sm leading-relaxed mb-6">
+              Die eingebettete Vorschau konnte nicht geladen werden (Timeout). Dies kann an Browser-Einschränkungen oder der Projektgröße liegen.
+            </p>
+            <button 
+              (click)="openInNewTab()" 
+              class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold transition-all flex items-center gap-3 mx-auto shadow-lg shadow-blue-900/20 active:scale-95"
+            >
+              <mat-icon>open_in_new</mat-icon>
+              In neuem Tab öffnen
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+</main>
+
+@if (showSettings()) {
+  <app-settings-dialog (closeSettings)="toggleSettings()"></app-settings-dialog>
+}
